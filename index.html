@@ -1,127 +1,74 @@
 <!DOCTYPE html>
-<html lang="mn">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Dodger Game</title>
-<h1>MC-1 Erkhembayr</h1>
-<style>
-  body {
-    background: #111;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-
-  #game {
-    position: relative;
-    width: 400px;
-    height: 500px;
-    background: #eee;
-    overflow: hidden;
-    border-radius: 10px;
-  }
-
-  #player {
-    position: absolute;
-    bottom: 10px;
-    left: 180px;
-    width: 40px;
-    height: 40px;
-    background: blue;
-    border-radius: 5px;
-  }
-
-  .fall {
-    position: absolute;
-    top: -40px;
-    width: 40px;
-    height: 40px;
-    background: red;
-    border-radius: 5px;
-  }
-
-  #score {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 18px;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      <style>
+        body{
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Poppins',sans-serif;
+            margin: 0;
+            color: white;
+        }
+        #timer{
+            font-size: 8rem;
+            font-weight: 700;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.8),
+                         0 0 80px (0, 150, 255, 0.6);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;transform: scale(0.6);}
+            to { opacity: 1; transform: scale(1);}
+        }
+        .pop {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        button{
+            position: absolute;
+            bottom: 50px;
+            background: #00c6ff;
+            background: linear-gradient(to right , #0072ff , #00c6ff);
+            color: white;
+            border: none;
+            padding: 14px 30px ;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px (0,0,0,0.3);
+            transition: transform 0.3 ease, box-shadow 0.3 ease;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px (0 , 200 , 255 , 0.7 );
+        }
+    </style>
 </head>
 <body>
-
-<div id="game">
-  <div id="score">Оноо: 0</div>
-  <div id="player"></div>
-</div>
-
-<script>
-const game = document.getElementById("game");
-const player = document.getElementById("player");
-const scoreEl = document.getElementById("score");
-
-let playerX = 180;
-let score = 0;
-let speed = 3;
-let gameOver = false;
-
-// Тоглогч хөдөлгөх
-document.addEventListener("keydown", e => {
-  if (gameOver) return;
-  if (e.key === "ArrowLeft" && playerX > 0) playerX -= 20;
-  if (e.key === "ArrowRight" && playerX < 360) playerX += 20;
-  player.style.left = playerX + "px";
-});
-
-// Унаж буй зүйл үүсгэх
-function createFall() {
-  if (gameOver) return;
-  const fall = document.createElement("div");
-  fall.classList.add("fall");
-  fall.style.left = Math.random() * 360 + "px";
-  game.appendChild(fall);
-
-  let y = -40;
-
-  const interval = setInterval(() => {
-    if (gameOver) {
-      clearInterval(interval);
-      fall.remove();
-      return;
+   <div id = "timer">10</div>
+   <button onclick="startCountdown()">Эхлүүлэх</button>
+   <script>
+    function startCountdown() {
+        const timer = document.getElementById('timer');
+        for (let i= 10; i>=0; i--) {
+            setTimeout(() => {
+                timer.innerText = i;
+                timer.classList.add('pop');
+                setTimeout(()=> timer.classList.remove("pop"),400);
+                if (i===0) {
+                    timer.innerText = "DUUSLAA";
+                }
+            }, (10-i)*1000);
+        }
     }
-
-    y += speed;
-    fall.style.top = y + "px";
-
-    // мөргөлдөөн шалгах
-    const fRect = fall.getBoundingClientRect();
-    const pRect = player.getBoundingClientRect();
-
-    if (
-      fRect.bottom > pRect.top &&
-      fRect.top < pRect.bottom &&
-      fRect.left < pRect.right &&
-      fRect.right > pRect.left
-    ) {
-      gameOver = true;
-      alert(" Game Over! Оноо: " + score);
-      location.reload();
-    }
-
-    if (y > 500) {
-      score++;
-      scoreEl.textContent = "Оноо: " + score;
-      fall.remove();
-      clearInterval(interval);
-    }
-
-  }, 20);
-}
-
-// Тоглоом эхлүүлэх
-setInterval(createFall, 1000);
-</script>
-
+   </script>
 </body>
 </html>
